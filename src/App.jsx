@@ -1,34 +1,47 @@
+import React from 'react'
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Form from './Form'
+import ShowTask from './ShowTask'
 
-function App() {
-  const [count, setCount] = useState(0)
+// 1.make a handlesubmit button and connect it to the form button---This is done
+// 2.make a delete button to delete the tasks out
+// 3.check and uncheck the completed tasks
+
+const App = () => {
+  const [todoList , setTodoList] = useState([
+    {
+      id:1,
+      name:"do the groceries"
+    }
+  ]);
+  const [newTaskName , setNewTaskName] = useState('');
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (newTaskName.trim() === '') {
+      alert("Enter a valid task");
+      return; // do not submit if new task is an empty string
+    } 
+    const id = todoList.length ? todoList[todoList.length - 1].id+1 : 1 ;
+    const newTask = {id , name:newTaskName};
+    const allList = [...todoList , newTask];
+    setTodoList(allList);
+    setNewTaskName('');
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className='App'>
+      <Form 
+        newTaskName={newTaskName}
+        setNewTaskName={setNewTaskName}
+        handleSubmit={handleSubmit}
+      />
+      <h1 style={{textAlign: "left"}}>Task Lists:</h1>
+      <ShowTask
+        todoList={todoList}
+        setTodoList= {setTodoList}
+        />
+    </div>
   )
 }
 
